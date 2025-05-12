@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@drawable/toast_background"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="Ubicación"
+        android:tint="@android:color/white"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
+        android:text="Selecciona tu nueva ubicación"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
