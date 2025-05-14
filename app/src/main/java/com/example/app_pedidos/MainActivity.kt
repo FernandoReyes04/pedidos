@@ -1,30 +1,21 @@
 package com.example.app_pedidos
 
 import android.Manifest
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -51,33 +42,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
             }
         }
-
-    private val qrScanLauncher = registerForActivityResult(ScanContract()) { result ->
-        if (result.contents == null) {
-            Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
-        } else {
-            // Mostrar modal de confirmación
-            showSuccessDialog(result.contents)
-        }
-    }
-
-    private fun showSuccessDialog(qrContent: String) {
-        val dialog = Dialog(this).apply {
-            setContentView(R.layout.dialog_success)
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            setCancelable(false)
-
-            findViewById<TextView>(R.id.tvSuccessMessage).text =
-                "Paquete Confirmado\n"
-        }
-
-        dialog.show()
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            dialog.dismiss()
-
-        }, 3000)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,55 +70,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         cameraButton.setOnClickListener {
-            checkCameraPermissionAndScan()
+            Toast.makeText(this, "Escaneo de paquete no implementado aún", Toast.LENGTH_SHORT).show()
         }
 
         showDetailsButton.setOnLongClickListener {
             startActivity(Intent(this, MapsActivity::class.java))
             true
-        }
-    }
-
-    private fun checkCameraPermissionAndScan() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED) {
-            startQRScanner()
-        } else {
-            // Solicitar permiso de cámara
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                1002 // Código de solicitud para cámara
-            )
-        }
-    }
-
-    private fun startQRScanner() {
-        val options = ScanOptions().apply {
-            setDesiredBarcodeFormats(ScanOptions.QR_CODE)
-            setPrompt("Escanea el código QR del paquete")
-            setCameraId(0) // Usar cámara trasera
-            setBeepEnabled(true)
-            setBarcodeImageEnabled(true)
-            setOrientationLocked(false)
-        }
-        qrScanLauncher.launch(options)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            1002 -> { // Código de solicitud para cámara
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startQRScanner()
-                } else {
-                    Toast.makeText(this, "Se necesita permiso de cámara para escanear QR", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
